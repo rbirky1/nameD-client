@@ -36,3 +36,7 @@
 #result-container {
     height: 100vh;
 }
+
+body{
+    overflow-y: scroll;
+}

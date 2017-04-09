@@ -50,12 +50,16 @@ $(function() {
     // On surname-input enter key down
     $surnameInput.keypress(function(e) {
         if (e.which == "13") {
-            search_for_surname($surnameInput.val());
+            if ($surnameInput.val() !== ""){
+                search_for_surname($surnameInput.val());
+            }
         }
     });
     // On surname-search-btn click
     $searchBtn.click(function(e) {
-        search_for_surname($surnameInput.val());
+        if ($surnameInput.val() !== ""){
+            search_for_surname($surnameInput.val());
+        }
     });
 	$surnameInput.keyup(function(e) {
 		if ($surnameInput.val() === ""){
@@ -65,6 +69,7 @@ $(function() {
 		}
 	});
 	$searchAgain.click(function(e) {
+	    $("#result-container").fadeOut(1000);
 	    $('html, body').stop().animate({
             scrollTop: $("#banner").offset().top
         }, 1000);
@@ -106,9 +111,10 @@ function search_for_surname(surname) {
 
 			var cols = [];
 			var total = row[3];
+			$("#total").text(total);
 			var accounted = 0;
 
-			if (data.asian && data.asian.length > 0) {
+			if (data.asian && JSON.parse(data.asian).length > 0) {
                 var asianJson = JSON.parse(data.asian);
                 var asianKey = asianJson[0][2];
                 var asianValue = asianMapping[asianKey];
