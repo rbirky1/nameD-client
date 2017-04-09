@@ -1,0 +1,15 @@
+#banner {
+    height: 100vh;
+}
+
+#search {
+    z-index: 10;
+}
+
+.typeahead.dropdown-menu {
+    width: 100%;
+}
+
+#loading-spinner-container {
+    height: 10vh;
+}
