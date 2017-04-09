@@ -36,7 +36,6 @@ $(function() {
     $.ajax({
        url: names_url,
        success: function(data){
-            console.log(data.names);
             $surnameInput.typeahead({ source: data.names });
             $surnameInput.attr("disabled",false).focus();
        },
@@ -69,6 +68,7 @@ $(function() {
 	    $('html, body').stop().animate({
             scrollTop: $("#banner").offset().top
         }, 1000);
+        $surnameInput.focus();
 	});
 });
 
@@ -80,20 +80,20 @@ function search_for_surname(surname) {
     var stats_url = 'http://'+ip+":"+port+"/"+stats;
     $.post( stats_url, req, function(data) {
 
-        $("#graphs").fadeIn();
+        $("#result-container").fadeIn();
         $("#surname-label").text(surname);
         $("#again").fadeIn();
 
         // Scroll to results
         $('html, body').stop().animate({
-            scrollTop: $("#graphs").offset().top
+            scrollTop: $("#result-container").offset().top
         }, 1000);
 		
 		var json = JSON.parse(data.census);
 		var row = json[0];
 		
 		if (!row || row.length == 0) {
-			console.log('no data');
+
 			$("#surname-no-data").text(surname);
 			$chartContainer.fadeOut(100);
 			$("#no-data").fadeIn();
