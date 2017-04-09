@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>nameD</title>
+    <title>nameQQ</title>
 
     <!--Bootstrap Style-->
     <link rel="stylesheet" href="style/bootstrap.min.css">
@@ -38,15 +38,16 @@
 <body>
 
 <div class="jumbotron" id="banner">
+    <!--<div id="banner-bg"></div>-->
     <div class="container text-center">
-        <div class="row">
-            <h1>nameD.</h1>
+        <div class="row" style="padding-top:30vh;">
+            <h1>nameQQ</h1>
             <p>tagline here.</p>
         </div>
         <div class="row">
             <div class="col-lg-12">
                 <div class="input-group input-group-lg">
-                    <input type="text" class="form-control" id="surname-input" placeholder="surname" data-provide="typeahead">
+                    <input type="text" disabled class="form-control" id="surname-input" placeholder="surname" data-provide="typeahead">
                     <span class="input-group-btn">
                         <button class="btn btn-default disabled" id="surname-search-btn" type="button"><span class="glyphicon glyphicon-search"></span></button>
                     </span>
@@ -56,20 +57,44 @@
     </div>
 </div>
 
-<div class="container text-center" id="graphs">
-    <div class="row">
-        <div class="col-lg-12" id="loading-spinner-container">
-            <span style="display:none;" id="loading-spinner"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></span>
-        </div>
-    </div>
+<div class="container text-center" id="graphs" style="display:none;">
+    <!--<div class="row">-->
+        <!--<div class="col-lg-12" id="loading-spinner-container">-->
+            <!--<span style="display:none;" id="loading-spinner"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></span>-->
+        <!--</div>-->
+    <!--</div>-->
     <div class="row" id="results">
-		<h2>Demographic Stats for Surname <span id="surname-label"></span></h2>
         <div class="col-lg-12" id="chart-container" style="display:none;">
+            <h2>Demographic Stats for Surname <span id="surname-label"></span></h2>
             <div id="chart"></div>
         </div>
 		<div class="col-lg-12" id="no-data" style="display:none;">
-			<p>Sorry, no data found for surname  <span id="surname-no-data"></span></p>
+			<h2>Sorry, no data found for surname  <span id="surname-no-data"></span></h2>
 		</div>
+    </div>
+
+</div>
+<div class="container text-center" id="again">
+    <div class="row">
+        <div class="col-ls-12">
+            <button class="btn btn-default" id="search-again-btn" type="button">Search Again</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="error-modal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Oops!</h2>
+            </div>
+            <div class="modal-body">
+                Sorry, there has been an error. Please try again.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Okay</button>
+            </div>
+        </div>
     </div>
 </div>
 

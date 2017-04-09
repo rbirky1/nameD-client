@@ -1,6 +1,8 @@
 #banner {
     height: 100vh;
-	padding-top: 30vh;
+	margin-bottom: 0;
+	background: url("../images/blob-mod.png");
+	background-size: cover;
 }
 
 #search {
@@ -16,7 +18,11 @@
 }
 
 #results {
-	height:100vh;
+	height: 90vh;
+}
+
+#again {
+    height: 10vh;
 }
 
 #surname-label, #surname-no-data {
