@@ -5,6 +5,7 @@ var $surnameInput = $("#surname-input");
 var $searchBtn = $("#surname-search-btn");
 // Get spinner
 var $spinner = $("#loading-spinner");
+var $chartContainer = $("#chart-container");
 // Map indices to field names T_T
 var mapping = [
     "White",
@@ -14,6 +15,9 @@ var mapping = [
     "Two or More Races",
     "Hispanic or Latino"
 ];
+var ip = '127.0.0.1';
+var port = 5000;
+var stats = 'get_stats';
 
 $(function() {
 
@@ -27,17 +31,27 @@ $(function() {
     // On surname-input enter key down
     $surnameInput.keypress(function(e) {
         if (e.which == "13") {
-            search_for_surname();
+            search_for_surname($surnameInput.val());
         }
     });
     // On surname-search-btn click
     $searchBtn.click(function(e) {
-        search_for_surname();
+        search_for_surname($surnameInput.val());
     })
+	$surnameInput.keyup(function(e){
+		if ($surnameInput.val() === ""){
+			$searchBtn.addClass("disabled");
+		} else {
+			$searchBtn.removeClass("disabled");
+		}
+	})
 
 });
 
 function search_for_surname(surname) {
+	
+	$("#surname-label").text(surname);
+	
 
     // Scroll to results
     $('html, body').stop().animate({
@@ -45,66 +59,68 @@ function search_for_surname(surname) {
     }, 1000);
 
     // Fade in spinner
-    $spinner.fadeIn(2000);
+    //$spinner.fadeIn(2000);
 
     // Data to send
-    var data = { name: $surnameInput.val() };
+    var req = $surnameInput.val();
 
-    /* Example data */
-    /*
-        index, name, rank, count, prop100k, cum_prop100k, pctwhite, pctblack, pctapi, pctaian, pct2prace, pcthispanic
-        [[30079,"BIRKY",30076,780,0.26,78844.16,"93.46","0.9","1.03","0.9","1.92","1.79"]]
-    */
-    //var res = [[30079,"BIRKY",30076,780,0.26,78844.16,"93.46","0.9","1.03","0.9","1.92","1.79"]];
-    //var res = [[30079,"BIRKY",30076,780,0.26,78844.16,"93.46","0.9","1.03","0.9","1.92","(s)"]];
+    var stats_url = 'http://'+ip+":"+port+"/"+stats;
+//    $.get(stats_url, function(data){
+    $.post( stats_url, req, function(data) {
+		// Remove or fade out spinner
+        //$spinner.fadeOut(1000);
+		
+		var json = JSON.parse(data.census);
+		var row = json[0];
+		
+		if (!row || row.length == 0) {
+			console.log('no data');
+			$("#surname-no-data").text(surname);
+			$chartContainer.fadeOut(100);
+			$("#no-data").fadeIn();
+		} else {
+		
+			$("#no-data").fadeOut();
+			$chartContainer.fadeIn(1000);
+			var percents = row.slice(6,12);
 
-    $.get("data/example_response.json", function(data){
-        // Fade out spinner
+			var cols = [];
+			var total = row[3];
+			var accounted = 0;
+
+			for (var i=0; i<percents.length; i++){
+				if (parseFloat(percents[i])) {
+					var percent = parseFloat(percents[i]);
+					var number = total*(percent/100.0);
+					var type = mapping[i];
+					cols.push([type, number]);
+					// Add to accounted
+					accounted += percent;
+				}
+			}
+
+			// if accounted != total make dummy (S)
+			if (accounted.toPrecision(3) != 100) {
+				cols.push(["Unknown", total*((100-accounted)/100.0)]);
+			}
+
+			var chart = c3.generate({
+				data: {
+					bindto: '#chart',
+					type : 'pie',
+					columns: cols
+				}
+			});
+        
+		}
+		
+    })
+    .fail(function() {
+        console.log( "error" );
+    })
+    .always(function() {
+        // Remove or fade out spinner
         $spinner.fadeOut(1000);
-
-        var row = data[0];
-        var percents = row.slice(6,12);
-
-        var cols = [];
-        var total = row[3];
-        var accounted = 0;
-
-        for (var i=0; i<percents.length; i++){
-            if (parseFloat(percents[i])) {
-                var percent = parseFloat(percents[i]);
-                var number = total*(percent/100.0);
-                var type = mapping[i];
-                cols.push([type, number]);
-                // Add to accounted
-                accounted += percent;
-            }
-        }
-
-        // if accounted != total make dummy (S)
-        if (accounted.toPrecision(3) != 100) {
-            cols.push(["Unknown", total*((100-accounted)/100.0)]);
-        }
-
-        var chart = c3.generate({
-            data: {
-                bindto: '#chart',
-                type : 'pie',
-                columns: cols
-            }
-        });
-
-        console.log(cols);
     });
-
-//    $.post( "url", data, function(res) {
-//        console.log(res);
-//    })
-//    .fail(function() {
-//        console.log( "error" );
-//    })
-//    .always(function() {
-//        // Remove or fade out spinner
-//        $spinner.fadeOut("fast");
-//    });
 
 };

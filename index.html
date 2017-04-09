@@ -4,25 +4,33 @@
     <meta charset="UTF-8">
     <title>nameD</title>
 
+    <!--Bootstrap Style-->
     <link rel="stylesheet" href="style/bootstrap.min.css">
     <link rel="stylesheet" href="style/bootstrap.min.css.map">
     <link rel="stylesheet" href="fonts/glyphicons-halflings-regular.ttf">
 
+    <!--Fontawesome Style-->
     <link rel="stylesheet" href="fonts/font-awesome.min.css">
     <link rel="stylesheet" href="fonts/fontawesome-webfont.ttf">
     <link rel="stylesheet" href="fonts/fontawesome-webfont.woff">
     <link rel="stylesheet" href="fonts/fontawesome-webfont.woff2">
 
+    <!--C3 Style-->
     <link rel="stylesheet" href="style/c3.min.css">
 
+    <!--Custom Style-->
     <link rel="stylesheet" href="style/main.css">
 
+    <!--jQuery-->
     <script src="js/jquery-3.2.0.min.js"></script>
 
+    <!--Bootstrap-->
     <script src="js/bootstrap.min.js"></script>
 
+    <!--Bootstrap Typeahead-->
     <script src="js/bootstrap3-typeahead.min.js"></script>
 
+    <!--C3-->
     <script src="js/d3.v3.js"></script>
     <script src="js/c3.min.js"></script>
 
@@ -40,7 +48,7 @@
                 <div class="input-group input-group-lg">
                     <input type="text" class="form-control" id="surname-input" placeholder="surname" data-provide="typeahead">
                     <span class="input-group-btn">
-                        <button class="btn btn-default" id="surname-search-btn" type="button"><span class="glyphicon glyphicon-search"></span></button>
+                        <button class="btn btn-default disabled" id="surname-search-btn" type="button"><span class="glyphicon glyphicon-search"></span></button>
                     </span>
                 </div>
             </div>
@@ -51,17 +59,19 @@
 <div class="container text-center" id="graphs">
     <div class="row">
         <div class="col-lg-12" id="loading-spinner-container">
-            <span  style="display:none;" id="loading-spinner"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></span>
+            <span style="display:none;" id="loading-spinner"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></span>
         </div>
     </div>
-    <div class="row">
-        <div class="col-lg-12">
+    <div class="row" id="results">
+		<h2>Demographic Stats for Surname <span id="surname-label"></span></h2>
+        <div class="col-lg-12" id="chart-container" style="display:none;">
             <div id="chart"></div>
         </div>
+		<div class="col-lg-12" id="no-data" style="display:none;">
+			<p>Sorry, no data found for surname  <span id="surname-no-data"></span></p>
+		</div>
     </div>
 </div>
-
-<div style="height: 100vh"></div>
 
 <script src="js/main.js"></script>
 

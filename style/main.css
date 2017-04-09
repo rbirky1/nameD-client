@@ -1,5 +1,6 @@
 #banner {
     height: 100vh;
+	padding-top: 30vh;
 }
 
 #search {
@@ -12,4 +13,12 @@
 
 #loading-spinner-container {
     height: 10vh;
+}
+
+#results {
+	height:100vh;
+}
+
+#surname-label, #surname-no-data {
+    text-transform:capitalize;
 }
