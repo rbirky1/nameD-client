@@ -3,8 +3,6 @@
 var $surnameInput = $("#surname-input");
 // Get surname search button
 var $searchBtn = $("#surname-search-btn");
-// Get spinner
-var $spinner = $("#loading-spinner");
 var $chartContainer = $("#chart-container");
 var $searchAgain = $("#search-again-btn");
 // Map indices to field names T_T
@@ -20,17 +18,33 @@ var ip = '127.0.0.1';
 var port = 5000;
 var stats = 'get_stats';
 var names = 'get_names';
+var asianMapping = {
+    'C':'Chinese',
+    'R':'Filipino',
+    'J':'Japanese',
+    'V':'Vietnamese',
+    'K':'Korean',
+    'I':'Indian'
+}
 
 $(function() {
 
     /* Initialization */
     // Get list of names in database for field autocomplete
     var names_url = 'http://'+ip+":"+port+"/"+names;
-//    var names_url = 'data/example_collection.json';
-    $.get(names_url, function(data){
-        console.log(data.names);
-        $surnameInput.typeahead({ source: data.names });
-        $surnameInput.attr("disabled",false).focus();
+
+    $.ajax({
+       url: names_url,
+       success: function(data){
+            console.log(data.names);
+            $surnameInput.typeahead({ source: data.names });
+            $surnameInput.attr("disabled",false).focus();
+       },
+       error: function(x, t, m) {
+           $('#modal-text').text('Sorry, it appears the server is offline. Please try again later.');
+           $('#error-modal').modal('show');
+       },
+       timeout: 5000
     });
 
     /* Event handlers */
@@ -60,19 +74,15 @@ $(function() {
 
 function search_for_surname(surname) {
 
-    // Fade in spinner
-    //$spinner.fadeIn(2000);
-
     // Data to send
     var req = $surnameInput.val();
 
     var stats_url = 'http://'+ip+":"+port+"/"+stats;
     $.post( stats_url, req, function(data) {
-		// Remove or fade out spinner
-        //$spinner.fadeOut(1000);
 
         $("#graphs").fadeIn();
         $("#surname-label").text(surname);
+        $("#again").fadeIn();
 
         // Scroll to results
         $('html, body').stop().animate({
@@ -89,7 +99,7 @@ function search_for_surname(surname) {
 			$("#no-data").fadeIn();
 
 		} else {
-		
+
 			$("#no-data").fadeOut();
 			$chartContainer.fadeIn(1000);
 			var percents = row.slice(6,12);
@@ -98,11 +108,24 @@ function search_for_surname(surname) {
 			var total = row[3];
 			var accounted = 0;
 
+			if (data.asian && data.asian.length > 0) {
+                var asianJson = JSON.parse(data.asian);
+                var asianKey = asianJson[0][2];
+                var asianValue = asianMapping[asianKey];
+            }
+
 			for (var i=0; i<percents.length; i++){
 				if (parseFloat(percents[i])) {
 					var percent = parseFloat(percents[i]);
 					var number = total*(percent/100.0);
 					var type = mapping[i];
+
+					if (i==2 && asianValue) {
+					    type+=" (";
+					    type+=asianValue;
+					    type+=")";
+					}
+
 					cols.push([type, number]);
 					// Add to accounted
 					accounted += percent;
@@ -121,11 +144,11 @@ function search_for_surname(surname) {
 					columns: cols
 				}
 			});
-        
 		}
 		
     })
     .fail(function() {
+        $('#modal-text').text('Sorry, there has been an error. Please try again.');
         $('#error-modal').modal('show');
     });
 

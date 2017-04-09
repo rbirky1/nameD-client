@@ -28,3 +28,7 @@
 #surname-label, #surname-no-data {
     text-transform:capitalize;
 }
+
+#chart {
+    height: 80vh;
+}
